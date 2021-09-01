@@ -19,13 +19,13 @@ public class PurchaseLottos {
     }
 
     private List<Integer> getRandomIntegerList() {
-        List<Integer> returnList = IntStream.rangeClosed(LottoNumber.LOTTO_START_NUMBER, LottoNumber.LOTTO_LAST_NUMBER)
+        List<Integer> returnList = IntStream.rangeClosed(LottoNumber.START_NUMBER, LottoNumber.LAST_NUMBER)
                 .boxed()
                 .collect(Collectors.toList());
 
         Collections.shuffle(returnList);
 
-        return returnList.stream().limit(Lotto.LOTTO_SIZE)
+        return returnList.stream().limit(Lotto.SIZE)
                 .sorted()
                 .collect(Collectors.toList());
     }

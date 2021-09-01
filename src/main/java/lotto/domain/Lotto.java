@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Lotto {
-    public static final int LOTTO_SIZE = 6;
-    public static final int LOTTO_PRICE = 1000;
+    public static final int SIZE = 6;
+    public static final int PRICE = 1000;
 
-    public static final String LOTTO_SIZE_ERROR_MESSAGE = "로또의 갯수는 " + Lotto.LOTTO_SIZE + "자이어야 합니다.";
+    public static final String LOTTO_SIZE_ERROR_MESSAGE = "로또의 갯수는 " + Lotto.SIZE + "자이어야 합니다.";
     public static final String LOTTO_NULL_MESSAGE = "로또에 null값을 넣을 수 없습니다.";
 
     private List<LottoNumber> lotto;
@@ -33,7 +33,7 @@ public class Lotto {
     }
 
     private void validateLottoNumbers(List<Integer> lottoNumbers) {
-        if (new HashSet<>(lottoNumbers).size() != Lotto.LOTTO_SIZE) {
+        if (new HashSet<>(lottoNumbers).size() != Lotto.SIZE) {
             throw new IllegalArgumentException(LOTTO_SIZE_ERROR_MESSAGE);
         }
     }

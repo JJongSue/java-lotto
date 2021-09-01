@@ -17,6 +17,6 @@ public class PurchaseAmount {
     }
 
     public int getLottoCount() {
-        return purchaseAmount / Lotto.LOTTO_PRICE;
+        return purchaseAmount / Lotto.PRICE;
     }
 }
