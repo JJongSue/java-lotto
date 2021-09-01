@@ -1,35 +1,31 @@
 package lotto.domain;
 
-public enum LottoResult {
-    THREE(3, 5_000),
-    FOUR(4, 50_000),
-    FIVE(5, 1_500_000),
-    SIX(6, 2_000_000_000);
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
-    private final int sameNumberCount;
-    private final int winnings;
-    private int count;
 
-    LottoResult(int sameNumberCount, int winnings) {
-        this.sameNumberCount = sameNumberCount;
-        this.winnings = winnings;
+public class LottoResult {
+    public static final String LOTTO_RESULT_ERROR_MESSAGE = "잘못된 등수값을 입력받았습니다.";
+
+    HashMap<Integer, Integer> lottoResult;
+
+    public LottoResult(List<Integer> sameNumberCounts) {
+        lottoResult = new HashMap<>();
+        Arrays.stream(LottoRank.values())
+                .mapToInt(rank -> rank.getSameNumberCount())
+                .forEach(sameNumberCount -> lottoResult.put(sameNumberCount, 0));
+
+        sameNumberCounts.stream()
+                .filter(sameNumber -> lottoResult.containsKey(sameNumber))
+                .forEach(sameNumber -> lottoResult.put(sameNumber, lottoResult.get(sameNumber) + 1));
     }
 
-    public int getCount() {
-        return count;
-    }
-
-    public int getSameNumberCount() {
-        return sameNumberCount;
-    }
-
-    public int getWinnings() {
-        return winnings;
-    }
-
-    public void addCount(int sameNumberCount){
-        if(this.sameNumberCount == sameNumberCount){
-            count++;
+    public int getValue(int rank) {
+        if (lottoResult.containsKey(rank)) {
+            return lottoResult.get(rank);
         }
+
+        throw new RuntimeException(LOTTO_RESULT_ERROR_MESSAGE);
     }
 }

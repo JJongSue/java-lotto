@@ -1,59 +1,44 @@
 package lotto.domain;
 
-import lotto.LottoConfig;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Lotto {
-    private List<Integer> lotto;
+    public static final int LOTTO_SIZE = 6;
+    public static final int LOTTO_PRICE = 1000;
 
-    public Lotto() {
-        lotto = IntStream.rangeClosed(LottoConfig.LOTTO_START_NUMBER, LottoConfig.LOTTO_LAST_NUMBER)
+    public static final String LOTTO_SIZE_ERROR_MESSAGE = "로또의 갯수는 " + Lotto.LOTTO_SIZE + "자이어야 합니다.";
+    public static final String LOTTO_NULL_MESSAGE = "로또에 null값을 넣을 수 없습니다.";
+
+    private List<LottoNumber> lotto;
+
+    public Lotto(List<Integer> lottoNumbers) {
+        if (lottoNumbers == null) {
+            throw new IllegalArgumentException(LOTTO_NULL_MESSAGE);
+        }
+        validateLottoNumbers(lottoNumbers);
+        this.lotto = lottoNumbers.stream()
+                .map(number -> new LottoNumber(number))
+                .sorted()
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+    }
+
+    public List<Integer> getValue() {
+        return lotto.stream()
+                .mapToInt(LottoNumber::getLottoNumber)
                 .boxed()
                 .collect(Collectors.toList());
-
-        Collections.shuffle(lotto);
-
-        lotto = lotto.stream().limit(LottoConfig.LOTTO_SIZE)
-                .sorted()
-                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
 
-    public Lotto(List<Integer> lotto) {
-        if (lotto == null) {
-            throw new IllegalArgumentException(LottoConfig.LOTTO_NULL_MESSAGE);
-        }
-        validateLottoSize(lotto);
-        validateLottoNumber(lotto);
-        this.lotto = lotto.stream()
-                .sorted()
-                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
-    }
-
-    public List<Integer> getLotto() {
-        return lotto;
-    }
-
-    private void validateLottoSize(List<Integer> lotto) {
-        if (new HashSet<>(lotto).size() != LottoConfig.LOTTO_SIZE) {
-            throw new IllegalArgumentException(LottoConfig.LOTTO_SIZE_ERROR_MESSAGE);
+    private void validateLottoNumbers(List<Integer> lottoNumbers) {
+        if (new HashSet<>(lottoNumbers).size() != Lotto.LOTTO_SIZE) {
+            throw new IllegalArgumentException(LOTTO_SIZE_ERROR_MESSAGE);
         }
     }
 
-    private void validateLottoNumber(List<Integer> lotto) {
-        boolean impossibleLottoNumber = lotto.stream()
-                .anyMatch((number) -> (number < LottoConfig.LOTTO_START_NUMBER || number > LottoConfig.LOTTO_LAST_NUMBER));
-
-        if (impossibleLottoNumber) {
-            throw new IllegalArgumentException(LottoConfig.LOTTO_NUMBER_ERROR_MESSAGE);
-        }
-    }
-
-    private boolean containNumber(int number) {
+    private boolean containNumber(LottoNumber number) {
         return lotto.contains(number);
     }
 

@@ -1,6 +1,5 @@
 package lotto.domain;
 
-import lotto.LottoConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -20,38 +19,17 @@ class LottoTest {
     void 로또번호_입력테스트() {
         List<Integer> input = Arrays.asList(1, 6, 3, 4, 5, 2);
         List<Integer> expected = Arrays.asList(1, 2, 3, 4, 5, 6);
-        List<Integer> actual = new Lotto(input).getLotto();
+        List<Integer> actual = new Lotto(input).getValue();
         assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void 로도번호_랜덤테스트_검증() {
-        Lotto lotto = new Lotto();
-        List<Integer> actualLotto = lotto.getLotto();
-
-        int actualSize = new HashSet<>(actualLotto).size();
-        assertThat(actualSize).isEqualTo(LottoConfig.LOTTO_SIZE);
-
-        //정렬여부 확인
-        List<Integer> expectOrderedList = actualLotto.stream()
-                .sorted()
-                .collect(Collectors.toList());
-        assertThat(actualLotto).isEqualTo(expectOrderedList);
-
-        boolean actualLottoNumberConfirm = actualLotto.stream()
-                .anyMatch(number -> (number < LottoConfig.LOTTO_START_NUMBER || number > LottoConfig.LOTTO_LAST_NUMBER));
-        assertThat(actualLottoNumberConfirm).isEqualTo(false);
     }
 
     @Test
     void 예외_범위_테스트_음수() {
         List<Integer> input = Arrays.asList(1, 2, 3, 4, 5, -1);
 
-        assertThatThrownBy(() -> {
-            lotto = new Lotto(input);
-        })
+        assertThatThrownBy(() -> lotto = new Lotto(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(LottoConfig.LOTTO_NUMBER_ERROR_MESSAGE);
+                .hasMessageContaining(LottoNumber.LOTTO_NUMBER_ERROR_MESSAGE);
     }
 
     @Test
@@ -62,7 +40,7 @@ class LottoTest {
             lotto = new Lotto(input);
         })
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(LottoConfig.LOTTO_NUMBER_ERROR_MESSAGE);
+                .hasMessageContaining(LottoNumber.LOTTO_NUMBER_ERROR_MESSAGE);
     }
 
     @Test
@@ -73,7 +51,7 @@ class LottoTest {
             lotto = new Lotto(input);
         })
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(LottoConfig.LOTTO_NUMBER_ERROR_MESSAGE);
+                .hasMessageContaining(LottoNumber.LOTTO_NUMBER_ERROR_MESSAGE);
     }
 
     @Test
@@ -86,7 +64,7 @@ class LottoTest {
             lotto = new Lotto(input);
         })
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(LottoConfig.LOTTO_SIZE_ERROR_MESSAGE);
+                .hasMessageContaining(Lotto.LOTTO_SIZE_ERROR_MESSAGE);
     }
 
     @Test
@@ -99,7 +77,7 @@ class LottoTest {
             lotto = new Lotto(input);
         })
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(LottoConfig.LOTTO_SIZE_ERROR_MESSAGE);
+                .hasMessageContaining(Lotto.LOTTO_SIZE_ERROR_MESSAGE);
     }
 
     @Test
@@ -110,7 +88,7 @@ class LottoTest {
             lotto = new Lotto(input);
         })
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(LottoConfig.LOTTO_SIZE_ERROR_MESSAGE);
+                .hasMessageContaining(Lotto.LOTTO_SIZE_ERROR_MESSAGE);
     }
 
     @ParameterizedTest
@@ -134,6 +112,6 @@ class LottoTest {
             lotto = new Lotto(null);
         })
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(LottoConfig.LOTTO_NULL_MESSAGE);
+                .hasMessageContaining(Lotto.LOTTO_NULL_MESSAGE);
     }
 }
